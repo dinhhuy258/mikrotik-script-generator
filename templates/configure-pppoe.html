@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configure PPPoE - Mikrotik Script Generator</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Configure PPPoE</h1>
+            <a href="/" class="back-link">← Back to Home</a>
+        </header>
+        <main>
+            <form action="/configure-pppoe" method="POST" class="config-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="{{ .formData.Username }}" required>
+                    {{ if .formData.Errors.username }}
+                        <span class="error">{{ .formData.Errors.username }}</span>
+                    {{ end }}
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" value="{{ .formData.Password }}" required>
+                    {{ if .formData.Errors.password }}
+                        <span class="error">{{ .formData.Errors.password }}</span>
+                    {{ end }}
+                </div>
+                <div class="form-group">
+                    <label for="interface">Interface:</label>
+                    <input type="text" id="interface" name="interface" value="{{ .formData.Interface }}" required>
+                    {{ if .formData.Errors.interface }}
+                        <span class="error">{{ .formData.Errors.interface }}</span>
+                    {{ end }}
+                </div>
+                <button type="submit" class="submit-btn">Generate Script</button>
+            </form>
+            {{ if .generatedScript }}
+            <div class="output-container">
+                <h2>Generated Script:</h2>
+                <textarea id="scriptOutput" readonly>{{ .generatedScript }}</textarea>
+                <button id="copyButton" onclick="copyScript()" class="copy-btn">Copy to Clipboard</button>
+            </div>
+            <script>
+                function copyScript() {
+                    var scriptOutput = document.getElementById('scriptOutput');
+                    scriptOutput.select();
+                    document.execCommand('copy');
+                    alert('Script copied to clipboard!');
+                }
+            </script>
+            {{ end }}
+        </main>
+        <footer>
+            <p>&copy; 2023 Mikrotik Script Generator. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
