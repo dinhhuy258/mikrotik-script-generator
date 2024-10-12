@@ -1,8 +1,8 @@
 package main
 
 import (
-	"mikrotik-script-generator/cmd"
 	"log"
+	"mikrotik-script-generator/cmd"
 )
 
 func main() {

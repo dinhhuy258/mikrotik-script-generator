@@ -1,0 +1,20 @@
+[*]
+insert_final_newline = true
+charset = utf-8
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[{Makefile,go.mod,go.sum,*.go,.gitmodules}]
+indent_style = tab
+indent_size = 4
+
+[*.go]
+max_line_length = 100
+
+[*.md]
+indent_size = 4
+trim_trailing_whitespace = false
+
+[Dockerfile]
+indent_size = 4
