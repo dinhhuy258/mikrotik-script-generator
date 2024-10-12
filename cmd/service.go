@@ -5,6 +5,7 @@ import (
 	"log"
 	"mikrotik-script-generator/config"
 	"mikrotik-script-generator/internal/controller"
+	"mikrotik-script-generator/internal/service"
 	"mikrotik-script-generator/pkg/httpserver"
 	"mikrotik-script-generator/pkg/logger"
 	"os"
@@ -37,6 +38,9 @@ func runSevice() {
 		fx.Provide(
 			newHttpServer,
 			controller.NewHomeController,
+			service.NewHomeService,
+			controller.NewScriptController,
+			service.NewScriptService,
 		),
 		fx.Supply(conf, logger),
 		fx.Invoke(startServer),
@@ -75,12 +79,13 @@ func startServer(lc fx.Lifecycle,
 	logger *logger.Logger,
 	server httpserver.Interface,
 	homeController controller.HomeController,
+	scriptController controller.ScriptController,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			logger.Info("Http server is listening on %v", conf.Http.Port)
 
-			controller.SetRoutes(server, homeController)
+			controller.SetRoutes(server, homeController, scriptController)
 
 			server.Start(ctx)
 

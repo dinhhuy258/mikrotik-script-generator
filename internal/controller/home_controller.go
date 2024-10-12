@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"mikrotik-script-generator/internal/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,26 +11,18 @@ type HomeController interface {
 	Index(context *gin.Context)
 }
 
-type homeController struct{}
-
-func NewHomeController() HomeController {
-	return &homeController{}
+type homeController struct {
+	homeService service.HomeService
 }
 
-type Script struct {
-	Name        string
-	Description string
-	Route       string
-}
-
-var scripts = []Script{
-	{Name: "Configure PPPoE", Description: "Set up PPPoE client configuration", Route: "/configure-pppoe"},
-	{Name: "Configure WireGuard", Description: "Set up WireGuard VPN configuration", Route: "/configure-wireguard"},
-	{Name: "Configure ECMP", Description: "Set up Equal-Cost Multi-Path routing", Route: "/configure-ecmp"},
+func NewHomeController(homeService service.HomeService) HomeController {
+	return &homeController{
+		homeService: homeService,
+	}
 }
 
 func (_self *homeController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "home.html", gin.H{
-		"scripts": scripts,
+		"scripts": _self.homeService.GetScripts(),
 	})
 }
