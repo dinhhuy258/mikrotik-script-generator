@@ -29,38 +29,42 @@ h1 {
     font-size: 1.1rem;
 }
 
-.script-grid {
+.script-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
 }
 
-.script-card {
+.script-item {
     background: #fff;
-    padding: 1.5rem;
+    padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: #333;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
-.script-card:hover {
+.script-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.script-card h2 {
+.script-item h2 {
     color: #3498db;
-    margin: 0;
-    font-size: 1.2rem;
+    margin-top: 0;
+    font-size: 1.5rem;
+}
+
+.script-item p {
+    margin-bottom: 0;
 }
 
 .arrow {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
     font-size: 1.5rem;
     color: #3498db;
 }
