@@ -7,11 +7,11 @@ import (
 func SetRoutes(
 	server httpserver.Interface,
 	homeController HomeController,
-	scriptController ScriptController,
+	wireguardScriptController WireguardScriptController,
 ) {
 	router := server.GetRouter()
 
 	router.GET("/", homeController.Index)
-	router.GET("/configure-wireguard", scriptController.ConfigWireGuard)
-	router.POST("/configure-wireguard", scriptController.ConfigWireGuardPost)
+	router.GET("/wireguard", wireguardScriptController.Index)
+	router.POST("/wireguard", wireguardScriptController.GenerateMikrotikScript)
 }

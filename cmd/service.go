@@ -39,7 +39,7 @@ func runSevice() {
 			newHttpServer,
 			controller.NewHomeController,
 			service.NewHomeService,
-			controller.NewScriptController,
+			controller.NewWireguardScriptController,
 			service.NewScriptService,
 		),
 		fx.Supply(conf, logger),
@@ -79,13 +79,13 @@ func startServer(lc fx.Lifecycle,
 	logger *logger.Logger,
 	server httpserver.Interface,
 	homeController controller.HomeController,
-	scriptController controller.ScriptController,
+	wireguardScriptController controller.WireguardScriptController,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			logger.Info("Http server is listening on %v", conf.Http.Port)
 
-			controller.SetRoutes(server, homeController, scriptController)
+			controller.SetRoutes(server, homeController, wireguardScriptController)
 
 			server.Start(ctx)
 

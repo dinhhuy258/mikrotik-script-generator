@@ -14,6 +14,6 @@ func NewHomeService() HomeService {
 
 func (_self *homeService) GetScripts() []model.Script {
 	return []model.Script{
-		{Name: "Configure WireGuard", Description: "Set up WireGuard VPN configuration", Route: "/configure-wireguard"},
+		{Name: "Configure WireGuard", Description: "Set up WireGuard VPN configuration", Route: "/wireguard"},
 	}
 }

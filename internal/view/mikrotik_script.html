@@ -1,8 +1,8 @@
-<turbo-frame id="generatedScript">
-  {{ if .generatedScript }}
+<turbo-frame id="mikrotikScript">
+  {{ if .mikrotikScript }}
   <div class="output-container">
       <h2>Generated Script:</h2>
-      <textarea id="scriptOutput" readonly>{{ .generatedScript }}</textarea>
+      <textarea id="scriptOutput" readonly>{{ .mikrotikScript }}</textarea>
       <button id="copyButton" onclick="copyScript()" class="copy-btn">Copy to Clipboard</button>
   </div>
   <script>

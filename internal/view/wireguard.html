@@ -15,7 +15,7 @@
             <a href="/" class="back-link">← Back to Home</a>
         </header>
         <main>
-            <form action="/configure-wireguard" method="POST" class="config-form" enctype="multipart/form-data" data-turbo-frame="generatedScript">
+            <form action="/wireguard" method="POST" class="config-form" enctype="multipart/form-data" data-turbo-frame="mikrotikScript">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" value="{{ .formData.Name }}" required>
@@ -56,12 +56,12 @@
                 </div>
                 <button type="submit" class="submit-btn">Generate Script</button>
             </form>
-            <turbo-frame id="generatedScript">
-              {{ template "script.html" . }}
+            <turbo-frame id="mikrotikScript">
+              {{ template "mikrotik_script.html" . }}
             </turbo-frame>
         </main>
         <footer>
-            <p>&copy; 2023 Mikrotik Script Generator. All rights reserved.</p>
+            <p>&copy; 2024 Mikrotik Script Generator. All rights reserved.</p>
         </footer>
     </div>
 </body>
