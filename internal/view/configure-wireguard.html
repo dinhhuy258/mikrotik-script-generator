@@ -6,6 +6,7 @@
     <title>Configure WireGuard - Mikrotik Script Generator</title>
     <link rel="stylesheet" href="/public/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@hotwired/turbo@7.1.0/dist/turbo.es2017-umd.js"></script>
 </head>
 <body>
     <div class="container">
@@ -14,7 +15,7 @@
             <a href="/" class="back-link">← Back to Home</a>
         </header>
         <main>
-            <form action="/configure-wireguard" method="POST" class="config-form" enctype="multipart/form-data">
+            <form action="/configure-wireguard" method="POST" class="config-form" enctype="multipart/form-data" data-turbo-frame="generatedScript">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" value="{{ .formData.Name }}" required>
@@ -55,21 +56,9 @@
                 </div>
                 <button type="submit" class="submit-btn">Generate Script</button>
             </form>
-            {{ if .generatedScript }}
-            <div class="output-container">
-                <h2>Generated Script:</h2>
-                <textarea id="scriptOutput" readonly>{{ .generatedScript }}</textarea>
-                <button id="copyButton" onclick="copyScript()" class="copy-btn">Copy to Clipboard</button>
-            </div>
-            <script>
-                function copyScript() {
-                    var scriptOutput = document.getElementById('scriptOutput');
-                    scriptOutput.select();
-                    document.execCommand('copy');
-                    alert('Script copied to clipboard!');
-                }
-            </script>
-            {{ end }}
+            <turbo-frame id="generatedScript">
+              {{ template "script.html" . }}
+            </turbo-frame>
         </main>
         <footer>
             <p>&copy; 2023 Mikrotik Script Generator. All rights reserved.</p>

@@ -10,6 +10,7 @@ import (
 
 type ScriptController interface {
 	ConfigWireGuard(context *gin.Context)
+	ConfigWireGuardPost(context *gin.Context)
 }
 
 type scriptController struct {
@@ -29,5 +30,11 @@ func (_self *scriptController) ConfigWireGuard(c *gin.Context) {
 			MTU:        1420,
 			ListenPort: 13231,
 		},
+	})
+}
+
+func (_self *scriptController) ConfigWireGuardPost(c *gin.Context) {
+	c.HTML(http.StatusOK, "script.html", gin.H{
+		"generatedScript": "Hello world",
 	})
 }

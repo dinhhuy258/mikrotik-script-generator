@@ -13,4 +13,5 @@ func SetRoutes(
 
 	router.GET("/", homeController.Index)
 	router.GET("/configure-wireguard", scriptController.ConfigWireGuard)
+	router.POST("/configure-wireguard", scriptController.ConfigWireGuardPost)
 }
