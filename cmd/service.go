@@ -10,8 +10,10 @@ import (
 	"mikrotik-script-generator/pkg/logger"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 
+	"github.com/gin-contrib/multitemplate"
 	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )
@@ -83,6 +85,8 @@ func startServer(lc fx.Lifecycle,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
+			configHttpServer(server)
+
 			logger.Info("Http server is listening on %v", conf.Http.Port)
 
 			controller.SetRoutes(server, homeController, wireguardScriptController)
@@ -101,4 +105,34 @@ func startServer(lc fx.Lifecycle,
 
 func newHttpServer(_ fx.Lifecycle, conf *config.Config) httpserver.Interface {
 	return httpserver.New(conf.Http.Port, conf.Http.ReadTimeout, conf.Http.WriteTimeout)
+}
+
+func configHttpServer(server httpserver.Interface) {
+	router := server.GetRouter()
+	router.Static("/public", "./public")
+	router.HTMLRender = loadViews("internal/view")
+}
+
+func loadViews(templatesDir string) multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+
+	layouts, err := filepath.Glob(templatesDir + "/layout/*.html")
+	if err != nil {
+		log.Fatalf("error occurred when load templates %+v", err)
+	}
+
+	includes, err := filepath.Glob(templatesDir + "/include/*.html")
+	if err != nil {
+		log.Fatalf("error occurred when load templates %+v", err)
+	}
+
+	// Generate our templates map from our layout/ and include/ directories
+	for _, include := range includes {
+		layoutCopy := make([]string, len(layouts))
+		copy(layoutCopy, layouts)
+		layoutCopy = append(layoutCopy, include)
+		r.AddFromFiles(filepath.Base(include), layoutCopy...)
+	}
+
+	return r
 }

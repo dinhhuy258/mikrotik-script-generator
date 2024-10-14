@@ -3,27 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mikrotik Script Generator</title>
+    <title>{{ .title }} - Mikrotik Script Generator</title>
     <link rel="stylesheet" href="/public/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@hotwired/turbo@7.1.0/dist/turbo.es2017-umd.js"></script>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Mikrotik Script Generator</h1>
-            <p class="subtitle">Generate configuration scripts for your Mikrotik devices</p>
+            <h1>{{ .title }}</h1>
+            {{ if ne .title "Mikrotik Script Generator" }}
+                <a href="/" class="back-link">← Back to Home</a>
+            {{ end }}
         </header>
+
         <main>
-            <div class="script-list">
-                {{ range .scripts }}
-                <a href="{{ .Route }}" class="script-item">
-                    <h2>{{ .Name }}</h2>
-                    <p>{{ .Description }}</p>
-                    <span class="arrow">→</span>
-                </a>
-                {{ end }}
-            </div>
+          {{template "content" .}}
         </main>
+
         <footer>
             <p>&copy; 2024 Mikrotik Script Generator. All rights reserved.</p>
         </footer>

@@ -1,0 +1,11 @@
+{{ define "content" }}
+<div class="script-list">
+    {{ range .scripts }}
+    <a href="{{ .Route }}" class="script-item">
+        <h2>{{ .Name }}</h2>
+        <p>{{ .Description }}</p>
+        <span class="arrow">→</span>
+    </a>
+    {{ end }}
+</div>
+{{ end }}

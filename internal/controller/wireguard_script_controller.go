@@ -25,6 +25,7 @@ func NewWireguardScriptController(scriptService service.ScriptService) Wireguard
 
 func (_self *wireguardScriptController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "wireguard.html", gin.H{
+		"title": "Configure WireGuard",
 		"formData": model.WireGuardFormData{
 			Name:       "mikrotik",
 			MTU:        1420,
@@ -34,7 +35,7 @@ func (_self *wireguardScriptController) Index(c *gin.Context) {
 }
 
 func (_self *wireguardScriptController) GenerateMikrotikScript(c *gin.Context) {
-	c.HTML(http.StatusOK, "mikrotik_script.html", gin.H{
+	c.HTML(http.StatusOK, "wireguard.html", gin.H{
 		"mikrotikScript": "Hello world",
 	})
 }

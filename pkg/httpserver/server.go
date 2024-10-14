@@ -31,8 +31,6 @@ func New(port int, readTimeout, writeTimeout time.Duration) Interface {
 	router := gin.New()
 	router.Use(gin.Logger())
 	router.Use(gin.Recovery())
-	router.Static("/public", "./public")
-	router.LoadHTMLGlob("internal/view/*")
 
 	server := server{
 		server: &http.Server{
