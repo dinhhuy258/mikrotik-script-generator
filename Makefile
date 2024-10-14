@@ -1,7 +1,10 @@
+DOCKER_RUN = docker run --rm -v $$PWD:/app -w /app
+GO_LINT_RUN = golangci-lint run
+
 .PHONY: lint
 lint:
-	@echo "==> Running lint check..."
-	@golangci-lint run
+	$(DOCKER_RUN) golangci/golangci-lint:v1.61.0-alpine \
+		$(GO_LINT_RUN)
 
 .PHONY: up
 up:

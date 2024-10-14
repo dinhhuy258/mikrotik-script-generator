@@ -8,34 +8,67 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const (
+	title             = "Configure WireGuard"
+	defaultListenPort = 13231
+	defaultName       = "mikrotik"
+)
+
 type WireguardScriptController interface {
 	Index(c *gin.Context)
 	GenerateMikrotikScript(c *gin.Context)
 }
 
 type wireguardScriptController struct {
-	scriptService service.ScriptService
+	wireguardScriptService service.WireguardScriptService
 }
 
-func NewWireguardScriptController(scriptService service.ScriptService) WireguardScriptController {
+func NewWireguardScriptController(wireguardScriptService service.WireguardScriptService) WireguardScriptController {
 	return &wireguardScriptController{
-		scriptService: scriptService,
+		wireguardScriptService: wireguardScriptService,
 	}
 }
 
 func (_self *wireguardScriptController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "wireguard.html", gin.H{
-		"title": "Configure WireGuard",
-		"formData": model.WireGuardFormData{
-			Name:       "mikrotik",
-			MTU:        1420,
-			ListenPort: 13231,
+		"Title": title,
+		"FormData": model.WireGuardFormData{
+			Name:       defaultName,
+			ListenPort: defaultListenPort,
 		},
 	})
 }
 
 func (_self *wireguardScriptController) GenerateMikrotikScript(c *gin.Context) {
+	var wireGuardFormData model.WireGuardFormData
+	if err := c.ShouldBind(&wireGuardFormData); err != nil {
+		c.HTML(http.StatusOK, "wireguard.html", gin.H{
+			"Title": title,
+			"FormData": model.WireGuardFormData{
+				Name:       defaultName,
+				ListenPort: defaultListenPort,
+			},
+			"Error": "There was an error processing your request",
+		})
+
+		return
+	}
+
+	wireGuardConfig, err := _self.wireguardScriptService.ParseConfig(wireGuardFormData.ConfigFile)
+	if err != nil {
+		c.HTML(http.StatusOK, "wireguard.html", gin.H{
+			"Title": title,
+			"FormData": model.WireGuardFormData{
+				Name:       defaultName,
+				ListenPort: defaultListenPort,
+			},
+			"Error": "There was an error parsing your WireGuard configuration file",
+		})
+
+		return
+	}
+
 	c.HTML(http.StatusOK, "wireguard.html", gin.H{
-		"mikrotikScript": "Hello world",
+		"MikrotikScript": wireGuardConfig.Interface.PrivateKey,
 	})
 }

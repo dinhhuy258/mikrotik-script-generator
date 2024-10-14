@@ -23,8 +23,8 @@ func NewHomeController(homeService service.HomeService) HomeController {
 
 func (_self *homeController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "home.html", gin.H{
-		"isHomePage": true,
-		"title": "Mikrotik Script Generator",
-		"scripts": _self.homeService.GetScripts(),
+		"IsHomePage":      true,
+		"Title":           "Mikrotik Script Generator",
+		"MikrotikScripts": _self.homeService.GetMikrotikScripts(),
 	})
 }

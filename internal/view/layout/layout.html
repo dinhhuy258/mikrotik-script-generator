@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ .title }} - Mikrotik Script Generator</title>
+    <title>{{ .Title }} - Mikrotik Script Generator</title>
     <link rel="stylesheet" href="/public/css/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@hotwired/turbo@7.1.0/dist/turbo.es2017-umd.js"></script>
@@ -11,8 +11,8 @@
 <body>
     <div class="container">
         <header>
-            <h1>{{ .title }}</h1>
-            {{ if ne .title "Mikrotik Script Generator" }}
+            <h1>{{ .Title }}</h1>
+            {{ if not .IsHomePage }}
                 <a href="/" class="back-link">← Back to Home</a>
             {{ end }}
         </header>

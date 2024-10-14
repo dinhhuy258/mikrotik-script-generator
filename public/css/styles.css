@@ -179,13 +179,12 @@ footer {
     color: #7f8c8d;
 }
 
-.error {
+.error-message {
+    background-color: #fde8e8;
+    border: 1px solid #f8b7bd;
+    border-radius: 4px;
     color: #e74c3c;
     font-size: 0.9rem;
-    margin-top: 0.25rem;
-    display: block;
-}
-
-input.error, select.error {
-    border-color: #e74c3c;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
 }

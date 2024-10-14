@@ -42,7 +42,7 @@ func runSevice() {
 			controller.NewHomeController,
 			service.NewHomeService,
 			controller.NewWireguardScriptController,
-			service.NewScriptService,
+			service.NewWireguardScriptService,
 		),
 		fx.Supply(conf, logger),
 		fx.Invoke(startServer),
