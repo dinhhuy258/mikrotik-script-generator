@@ -68,7 +68,26 @@ func (_self *wireguardScriptController) GenerateMikrotikScript(c *gin.Context) {
 		return
 	}
 
+	mikrotikScript, err := _self.wireguardScriptService.GenerateScript(
+		wireGuardFormData.Name,
+		wireGuardFormData.ListenPort,
+		wireGuardFormData.ConfigType,
+		wireGuardConfig,
+	)
+	if err != nil {
+		c.HTML(http.StatusOK, "wireguard.html", gin.H{
+			"Title": title,
+			"FormData": model.WireGuardFormData{
+				Name:       defaultName,
+				ListenPort: defaultListenPort,
+			},
+			"Error": "There was an error generating your Mikrotik script",
+		})
+
+		return
+	}
+
 	c.HTML(http.StatusOK, "wireguard.html", gin.H{
-		"MikrotikScript": wireGuardConfig.Interface.PrivateKey,
+		"MikrotikScript": mikrotikScript,
 	})
 }

@@ -1,0 +1,52 @@
+# Create Wireguard interface
+/interface wireguard
+add name={{.Name}}-wireguard \
+    private-key="{{.Wireguard.Interface.PrivateKey}}" \
+    listen-port={{.ListenPort}} \
+    mtu={{.Wireguard.Interface.MTU}}
+
+# Add a peer
+/interface wireguard peers
+add name={{.Name}}-peer \
+    interface={{.Name}}-wireguard \
+    public-key="{{.Wireguard.Peer.PublicKey}}" \
+    endpoint-address={{.Wireguard.Peer.EndpointHost}} \
+    endpoint-port={{.Wireguard.Peer.EndpointPort}} \
+    allowed-address=0.0.0.0/0,::/0 \
+    preshared-key="{{.Wireguard.Peer.PresharedKey}}"
+
+# Create address list
+/ip address
+add interface={{.Name}}-wireguard address={{.Wireguard.Interface.Address}} network={{.Wireguard.Interface.Address}}
+
+# Create routing table
+/routing table
+add disabled=no fib name=output-{{.Name}}-wireguard
+
+# Create route
+/ip route
+add disabled=no \
+    dst-address=0.0.0.0/0 \
+    gateway={{.Name}}-wireguard \
+    routing-table=output-{{.Name}}-wireguard \
+    suppress-hw-offload=no
+
+# Create NAT rule
+/ip firewall nat
+add chain=srcnat \
+    out-interface={{.Name}}-wireguard \
+    action=masquerade \
+    comment="{{.Name}}'s Wireguard"
+
+# Create address list
+/ip firewall address-list
+add list={{.Name}}_address_list address=0.0.0.0/0
+
+# Create mangle firewall
+/ip firewall mangle
+add action=mark-routing \
+    chain=prerouting \
+    dst-address-list={{.Name}}_address_list \
+    new-routing-mark=output-{{.Name}}-wireguard \
+    passthrough=no \
+    comment="{{.Name}} Wireguard"
