@@ -9,6 +9,7 @@ require (
 	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/rs/zerolog v1.33.0
+	github.com/samber/lo v1.47.0
 	github.com/spf13/cobra v1.8.1
 	go.uber.org/fx v1.23.0
 	gopkg.in/ini.v1 v1.67.0
@@ -44,7 +45,7 @@ require (
 	golang.org/x/crypto v0.23.0 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
-	golang.org/x/text v0.15.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/protobuf v1.34.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -6,11 +6,16 @@ import (
 	"io"
 	"mime/multipart"
 	"net"
+	"strings"
 
+	"github.com/samber/lo"
 	"gopkg.in/ini.v1"
 )
 
-const defaultMTU = "1420"
+const (
+	defaultMTU       = "1420"
+	defaultAllowedIP = "0.0.0.0/0"
+)
 
 type WireguardConfig struct {
 	Interface struct {
@@ -23,6 +28,7 @@ type WireguardConfig struct {
 		EndpointHost string
 		EndpointPort string
 		PresharedKey string
+		AllowedIPs   []string
 	}
 }
 
@@ -96,6 +102,20 @@ func (_self *wireguardScriptService) ParseConfig(cfgFile *multipart.FileHeader) 
 	publicKey := peerSection.Key("PublicKey").String()
 	endpoint := peerSection.Key("Endpoint").String()
 	presharedKey := peerSection.Key("PresharedKey").String()
+	allowedIPsStr := peerSection.Key("AllowedIPs").String()
+	// Split the string by comma and remove any leading/trailing whitespaces
+	allowedIPs := strings.Split(allowedIPsStr, ",")
+	// Remove any leading/trailing whitespaces
+	allowedIPs = lo.Map(allowedIPs, func(ip string, _ int) string {
+		return strings.TrimSpace(ip)
+	})
+	// Only allow IPv4 addresses
+	allowedIPs = lo.Filter(allowedIPs, func(ip string, _ int) bool {
+		return isIPv4(ip)
+	})
+	if len(allowedIPs) == 0 {
+		allowedIPs = []string{defaultAllowedIP}
+	}
 
 	endpointHost, endpointPort, err := net.SplitHostPort(endpoint)
 	if err != nil {
@@ -117,11 +137,26 @@ func (_self *wireguardScriptService) ParseConfig(cfgFile *multipart.FileHeader) 
 			EndpointHost string
 			EndpointPort string
 			PresharedKey string
+			AllowedIPs   []string
 		}{
 			PublicKey:    publicKey,
 			EndpointHost: endpointHost,
 			EndpointPort: endpointPort,
 			PresharedKey: presharedKey,
+			AllowedIPs:   allowedIPs,
 		},
 	}, nil
+}
+
+func isIPv4(address string) bool {
+	// Check if address has a CIDR notation (subnet)
+	if strings.Contains(address, "/") {
+		ip, _, err := net.ParseCIDR(address)
+
+		return err == nil && ip.To4() != nil
+	}
+
+	ip := net.ParseIP(address)
+
+	return ip != nil && ip.To4() != nil
 }
