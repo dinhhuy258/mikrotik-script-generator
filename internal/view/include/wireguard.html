@@ -1,8 +1,5 @@
 {{ define "content" }}
 <div>
-    {{ if .Error }}
-        <div class="error-message">{{ .Error }}</div>
-    {{ end }}
     <form action="/wireguard" method="POST" class="config-form" enctype="multipart/form-data" data-turbo-frame="mikrotik-script">
         <div class="form-group">
             <label for="name">Name:</label>
@@ -26,6 +23,9 @@
         <button type="submit" class="submit-btn">Generate Script</button>
     </form>
     <turbo-frame id="mikrotik-script">
+      {{ if .Error }}
+      <div class="error-message">{{ .Error }}</div>
+      {{ end }}
       {{ if .MikrotikScript }}
       <div class="output-container">
           <h2>Generated Script:</h2>

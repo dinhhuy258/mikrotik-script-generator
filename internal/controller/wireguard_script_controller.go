@@ -43,11 +43,6 @@ func (_self *wireguardScriptController) GenerateMikrotikScript(c *gin.Context) {
 	var wireGuardFormData model.WireGuardFormData
 	if err := c.ShouldBind(&wireGuardFormData); err != nil {
 		c.HTML(http.StatusOK, "wireguard.html", gin.H{
-			"Title": title,
-			"FormData": model.WireGuardFormData{
-				Name:       defaultName,
-				ListenPort: defaultListenPort,
-			},
 			"Error": "There was an error processing your request",
 		})
 
@@ -57,11 +52,6 @@ func (_self *wireguardScriptController) GenerateMikrotikScript(c *gin.Context) {
 	wireGuardConfig, err := _self.wireguardScriptService.ParseConfig(wireGuardFormData.ConfigFile)
 	if err != nil {
 		c.HTML(http.StatusOK, "wireguard.html", gin.H{
-			"Title": title,
-			"FormData": model.WireGuardFormData{
-				Name:       defaultName,
-				ListenPort: defaultListenPort,
-			},
 			"Error": "There was an error parsing your WireGuard configuration file",
 		})
 
@@ -76,11 +66,6 @@ func (_self *wireguardScriptController) GenerateMikrotikScript(c *gin.Context) {
 	)
 	if err != nil {
 		c.HTML(http.StatusOK, "wireguard.html", gin.H{
-			"Title": title,
-			"FormData": model.WireGuardFormData{
-				Name:       defaultName,
-				ListenPort: defaultListenPort,
-			},
 			"Error": "There was an error generating your Mikrotik script",
 		})
 
