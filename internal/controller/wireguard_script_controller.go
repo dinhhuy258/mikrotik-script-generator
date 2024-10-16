@@ -9,14 +9,13 @@ import (
 )
 
 const (
-	title             = "Configure WireGuard"
-	defaultListenPort = 13231
-	defaultName       = "mikrotik"
+	wireguardTitle             = "Configure WireGuard"
+	defaultWireguardName       = "mikrotik"
+	defaultWireguardListenPort = 13231
 )
 
 type WireguardScriptController interface {
-	Index(c *gin.Context)
-	GenerateMikrotikScript(c *gin.Context)
+	BaseScriptController
 }
 
 type wireguardScriptController struct {
@@ -31,10 +30,10 @@ func NewWireguardScriptController(wireguardScriptService service.WireguardScript
 
 func (_self *wireguardScriptController) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "wireguard.html", gin.H{
-		"Title": title,
+		"Title": wireguardTitle,
 		"FormData": model.WireGuardFormData{
-			Name:       defaultName,
-			ListenPort: defaultListenPort,
+			Name:       defaultWireguardName,
+			ListenPort: defaultWireguardListenPort,
 		},
 	})
 }
