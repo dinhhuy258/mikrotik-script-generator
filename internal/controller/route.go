@@ -9,6 +9,7 @@ func SetRoutes(
 	homeController HomeController,
 	wireguardScriptController WireguardScriptController,
 	ecmpScriptController ECMPScriptController,
+	pppoeScriptController PPPoEScriptController,
 ) {
 	router := server.GetRouter()
 
@@ -17,4 +18,6 @@ func SetRoutes(
 	router.POST("/wireguard", wireguardScriptController.GenerateMikrotikScript)
 	router.GET("/ecmp", ecmpScriptController.Index)
 	router.POST("/ecmp", ecmpScriptController.GenerateMikrotikScript)
+	router.GET("/pppoe", pppoeScriptController.Index)
+	router.POST("/pppoe", pppoeScriptController.GenerateMikrotikScript)
 }

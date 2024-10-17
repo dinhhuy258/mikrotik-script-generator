@@ -5,45 +5,37 @@ import (
 	"html/template"
 )
 
-type ECMPScriptService interface {
+type PPPoEScriptService interface {
 	GenerateScript(
 		username,
 		password string,
-		numSessions int,
 		interfaceName,
 		lanNetwork string,
 	) (string, error)
 }
 
-type ecmpScriptService struct{}
+type pppoeScriptService struct{}
 
-func NewECMPScriptService() ECMPScriptService {
-	return &ecmpScriptService{}
+func NewPPPoEScriptService() PPPoEScriptService {
+	return &pppoeScriptService{}
 }
 
-func (_self *ecmpScriptService) GenerateScript(
+func (_self *pppoeScriptService) GenerateScript(
 	username,
 	password string,
-	numSessions int,
 	interfaceName,
 	lanNetwork string,
 ) (string, error) {
-	tmpl, err := template.ParseFiles("internal/service/mikrotik/ecmp_script.tmpl")
+	tmpl, err := template.ParseFiles("internal/service/mikrotik/pppoe_script.tmpl")
 	if err != nil {
 		return "", err
 	}
 
 	var script bytes.Buffer
 
-	sessions := make([]int, numSessions)
-	for i := 0; i < numSessions; i++ {
-		sessions[i] = i + 1
-	}
-
 	err = tmpl.Execute(&script, map[string]interface{}{
 		"Username":   username,
 		"Password":   password,
-		"Sessions":   sessions,
 		"Interface":  interfaceName,
 		"LANNetwork": lanNetwork,
 	})

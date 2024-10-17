@@ -15,6 +15,11 @@ func NewHomeService() HomeService {
 func (_self *homeService) GetMikrotikScripts() []model.MikrotikScript {
 	return []model.MikrotikScript{
 		{
+			Name:        "Configure PPPoE",
+			Description: "Set up PPPoE connection",
+			Route:       "/pppoe",
+		},
+		{
 			Name:        "Configure WireGuard",
 			Description: "Set up WireGuard VPN configuration",
 			Route:       "/wireguard",

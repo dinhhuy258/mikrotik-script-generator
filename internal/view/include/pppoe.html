@@ -1,0 +1,43 @@
+{{ define "content" }}
+<div>
+    <form action="/ecmp" method="POST" class="config-form" data-turbo-frame="mikrotik-script">
+        <div class="form-group">
+            <label for="username">PPPoE username:</label>
+            <input type="text" id="username" name="username" value="{{ .FormData.Username }}" required>
+        </div>
+        <div class="form-group">
+            <label for="password">PPPoE password:</label>
+            <input type="password" id="password" name="password" value="{{ .FormData.Password }}" required>
+        </div>
+        <div class="form-group">
+            <label for="interface">PPPoE Interface:</label>
+            <input type="text" id="interface" name="interface" value="{{ .FormData.Interface }}" required>
+        </div>
+        <div class="form-group">
+            <label for="lanNetwork">LAN Network:</label>
+            <input type="text" id="lanNetwork" name="lanNetwork" value="{{ .FormData.LANNetwork }}" placeholder="e.g., 192.168.0.1/24" required>
+        </div>
+        <button type="submit" class="submit-btn">Generate Script</button>
+    </form>
+    <turbo-frame id="mikrotik-script">
+      {{ if .Error }}
+      <div class="error-message">{{ .Error }}</div>
+      {{ end }}
+      {{ if .MikrotikScript }}
+      <div class="output-container">
+          <h2>Generated Script:</h2>
+          <textarea id="scriptOutput" readonly>{{ .MikrotikScript }}</textarea>
+          <button id="copyButton" onclick="copyScript()" class="copy-btn">Copy to Clipboard</button>
+      </div>
+      <script>
+          function copyScript() {
+              var scriptOutput = document.getElementById('scriptOutput');
+              scriptOutput.select();
+              document.execCommand('copy');
+              alert('Script copied to clipboard!');
+          }
+      </script>
+      {{ end }}
+    </turbo-frame>
+</div>
+{{ end }}

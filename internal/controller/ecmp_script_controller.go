@@ -54,15 +54,10 @@ func (_self *emcpScriptController) GenerateMikrotikScript(c *gin.Context) {
 		return
 	}
 
-	sessions := make([]int, ecmpFormData.Sessions)
-	for i := 0; i < ecmpFormData.Sessions; i++ {
-		sessions[i] = i + 1
-	}
-
 	mikrotikScript, err := _self.ecmpScriptService.GenerateScript(
 		ecmpFormData.Username,
 		ecmpFormData.Password,
-		sessions,
+		ecmpFormData.Sessions,
 		ecmpFormData.Interface,
 		ecmpFormData.LANNetwork,
 	)

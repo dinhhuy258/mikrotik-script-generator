@@ -45,6 +45,8 @@ func runSevice() {
 			service.NewWireguardScriptService,
 			controller.NewECMPScriptController,
 			service.NewECMPScriptService,
+			controller.NewPPPoEScriptController,
+			service.NewPPPoEScriptService,
 		),
 		fx.Supply(conf, logger),
 		fx.Invoke(startServer),
@@ -85,6 +87,7 @@ func startServer(lc fx.Lifecycle,
 	homeController controller.HomeController,
 	wireguardScriptController controller.WireguardScriptController,
 	ecmpScriptController controller.ECMPScriptController,
+	pppoeScriptController controller.PPPoEScriptController,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
@@ -97,6 +100,7 @@ func startServer(lc fx.Lifecycle,
 				homeController,
 				wireguardScriptController,
 				ecmpScriptController,
+				pppoeScriptController,
 			)
 
 			server.Start(ctx)

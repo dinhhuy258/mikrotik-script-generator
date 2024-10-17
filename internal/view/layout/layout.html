@@ -12,7 +12,13 @@
     <div class="container">
         <header>
             <h1>{{ .Title }}</h1>
-            {{ if not .IsHomePage }}
+            {{ if .IsHomePage }}
+                <p class="disclaimer">
+                    This tool helps me reduce the time needed to configure Mikrotik devices. I do not collect any sensitive data. For your safety, you can use fake data when generating the script.
+                    The source code is available on
+                    <a href="https://github.com/dinhhuy258/mikrotik-script-generator" target="_blank" rel="noopener noreferrer">GitHub</a>.
+                </p>
+            {{ else }}
                 <a href="/" class="back-link">← Back to Home</a>
             {{ end }}
         </header>

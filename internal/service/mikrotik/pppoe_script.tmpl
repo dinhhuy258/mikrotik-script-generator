@@ -1,0 +1,5 @@
+/interface pppoe-client
+add add-default-route=yes disabled=no interface={{ $.Interface }} name={{ $.Interface }}-pppoe-out{{ . }} user={{ $.Username }} password={{ $.Password }}
+
+/ip firewall nat
+add action=masquerade chain=srcnat out-interface-list=pppoe-outs
