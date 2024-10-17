@@ -4,16 +4,15 @@ FROM golang:1.23.2-alpine
 WORKDIR /app
 
 # Copy go mod and sum files
-COPY mikrotik-script-generator/go.mod mikrotik-script-generator/go.sum ./
+COPY ../go.mod ../go.sum ./
 
-# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
-RUN go mod download
+# Download dependencies
+RUN go mod tidy
 
-# Copy the source from the current directory to the Working Directory inside the container
-COPY mikrotik-script-generator/. .
+# Copy the source code to the working directory
+COPY ../ ./
 
 # Build the Go app
-RUN go build -o main main.go
+RUN go build -o /app/mikrotik-script-generator main.go
 
-# Command to run the executable
-ENTRYPOINT ["./main", "service"]
+ENTRYPOINT ["/app/mikrotik-script-generator", "service"]
