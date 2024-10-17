@@ -17,6 +17,10 @@
             <label for="interface">PPPoE Interface:</label>
             <input type="text" id="interface" name="interface" value="{{ .FormData.Interface }}" required>
         </div>
+        <div class="form-group">
+            <label for="lanNetwork">LAN Network:</label>
+            <input type="text" id="lanNetwork" name="lanNetwork" value="{{ .FormData.LANNetwork }}" placeholder="e.g., 192.168.0.1/24" required>
+        </div>
         <button type="submit" class="submit-btn">Generate Script</button>
     </form>
     <turbo-frame id="mikrotik-script">

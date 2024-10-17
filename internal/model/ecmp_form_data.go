@@ -5,4 +5,5 @@ type ECMPFormData struct {
 	Password   string `form:"password"`
 	Sessions   int    `form:"sessions"`
 	Interface  string `form:"interface"`
+	LANNetwork string `form:"lanNetwork"`
 }

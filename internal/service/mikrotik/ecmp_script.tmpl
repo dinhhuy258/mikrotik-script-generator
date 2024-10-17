@@ -1,0 +1,40 @@
+/interface macvlan
+{{- range .Sessions }}
+add interface={{ $.Interface }} mode=private name={{ $.Interface }}-macvlan{{ . }}
+{{- end }}
+
+/interface pppoe-client
+{{- range .Sessions }}
+add add-default-route=yes disabled=no interface={{ $.Interface }}-macvlan{{ . }} name={{ $.Interface }}-pppoe-out{{ . }} user={{ $.Username }} password={{ $.Password }} default-route-distance={{ . }}
+{{- end }}
+
+/interface list
+add name=pppoe-outs
+
+/interface list member
+{{- range .Sessions }}
+add interface={{ $.Interface }}-pppoe-out{{ . }} list=pppoe-outs
+{{- end }}
+
+/ip firewall nat
+add action=masquerade chain=srcnat out-interface-list=pppoe-outs
+
+/ip settings
+set ipv4-multipath-hash-policy=l4
+
+/ipv6 settings
+set multipath-hash-policy=l4
+
+/routing table
+add fib name=ecmp
+
+/ip route
+{{- range .Sessions }}
+add dst-address=0.0.0.0/0 gateway={{ $.Interface }}-pppoe-out{{ . }} routing-table=ecmp
+{{- end }}
+
+/routing rule
+add action=lookup disabled=no min-prefix=0 table=main
+
+/routing rule
+add action=lookup dst-address=0.0.0.0/0 src-address={{ $.LANNetwork }} table=ecmp
