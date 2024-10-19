@@ -1,5 +1,34 @@
+# Set up PPPoE client
 /interface pppoe-client
-add add-default-route=yes disabled=no interface={{ $.Interface }} name={{ $.Interface }}-pppoe-out{{ . }} user={{ $.Username }} password={{ $.Password }}
+add add-default-route=yes disabled=no interface={{ .Interface }} name={{ .Interface }}-pppoe-out user={{ .Username }} password={{ .Password }}
 
+# Create a bridge
+/interface bridge
+add name=bridge-lan
+
+# Add LAN ports to the bridge
+/interface bridge port
+{{- range .BridgeLANPorts }}
+add bridge=bridge-lan interface={{ . }}
+{{- end }}
+
+# Assign IP address to the bridge-lan
+/ip address
+add address={{ .LANNetwork }} interface=bridge-lan
+
+# Set up DHCP
+/ip dhcp-client
+add interface={{ .Interface }}
+
+/ip pool
+add name=dhcp-pool-bridge-lan ranges={{ .DHCPRange }}
+
+/ip dhcp-server
+add address-pool=dhcp-pool-bridge-lan interface=bridge-lan name=dhcp-bridge-lan
+
+/ip dhcp-server network
+add address={{ .LANNetwork }} dns-server=1.1.1.1 gateway={{ .Gateway }}
+
+# Set up NAT
 /ip firewall nat
-add action=masquerade chain=srcnat out-interface-list=pppoe-outs
+add action=masquerade chain=srcnat out-interface={{ .Interface }}-pppoe-out

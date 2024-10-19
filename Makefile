@@ -9,3 +9,7 @@ lint:
 .PHONY: up
 up:
 	@go run main.go service
+
+.PHONY: build-docker
+build-docker:
+	@docker build -f build/Dockerfile -t mikrotik-script-generator . --platform=linux/amd64
