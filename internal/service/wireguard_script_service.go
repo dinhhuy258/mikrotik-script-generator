@@ -2,7 +2,6 @@ package service
 
 import (
 	"bytes"
-	"html/template"
 	"io"
 	"mime/multipart"
 	"net"
@@ -37,7 +36,9 @@ type WireguardScriptService interface {
 	GenerateScript(name string, listenPort int, configType string, wireguardCfg *WireguardConfig) (string, error)
 }
 
-type wireguardScriptService struct{}
+type wireguardScriptService struct {
+	BaseScriptGenerator
+}
 
 func NewWireguardScriptService() WireguardScriptService {
 	return &wireguardScriptService{}
@@ -49,24 +50,13 @@ func (_self *wireguardScriptService) GenerateScript(
 	configType string,
 	wireguardCfg *WireguardConfig,
 ) (string, error) {
-	tmpl, err := template.ParseFiles("internal/service/mikrotik/wireguard_script.tmpl")
-	if err != nil {
-		return "", err
-	}
-
-	var script bytes.Buffer
-
-	err = tmpl.Execute(&script, map[string]interface{}{
-		"Name":       name,
-		"ListenPort": listenPort,
-		"ConfigType": configType,
-		"Wireguard":  wireguardCfg,
-	})
-	if err != nil {
-		return "", err
-	}
-
-	return script.String(), nil
+	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/wireguard_script.tmpl",
+		map[string]interface{}{
+			"Name":       name,
+			"ListenPort": listenPort,
+			"ConfigType": configType,
+			"Wireguard":  wireguardCfg,
+		})
 }
 
 func (_self *wireguardScriptService) ParseConfig(cfgFile *multipart.FileHeader) (*WireguardConfig, error) {

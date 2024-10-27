@@ -1,10 +1,5 @@
 package service
 
-import (
-	"bytes"
-	"html/template"
-)
-
 type PPPoEScriptService interface {
 	GenerateScript(
 		username,
@@ -17,7 +12,9 @@ type PPPoEScriptService interface {
 	) (string, error)
 }
 
-type pppoeScriptService struct{}
+type pppoeScriptService struct {
+	BaseScriptGenerator
+}
 
 func NewPPPoEScriptService() PPPoEScriptService {
 	return &pppoeScriptService{}
@@ -32,14 +29,7 @@ func (_self *pppoeScriptService) GenerateScript(
 	lanNetwork,
 	dhcpRange string,
 ) (string, error) {
-	tmpl, err := template.ParseFiles("internal/service/mikrotik/pppoe_script.tmpl")
-	if err != nil {
-		return "", err
-	}
-
-	var script bytes.Buffer
-
-	err = tmpl.Execute(&script, map[string]interface{}{
+	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/pppoe_script.tmpl", map[string]interface{}{
 		"Username":       username,
 		"Password":       password,
 		"Interface":      interfaceName,
@@ -48,9 +38,4 @@ func (_self *pppoeScriptService) GenerateScript(
 		"LANNetwork":     lanNetwork,
 		"DHCPRange":      dhcpRange,
 	})
-	if err != nil {
-		return "", err
-	}
-
-	return script.String(), nil
 }
