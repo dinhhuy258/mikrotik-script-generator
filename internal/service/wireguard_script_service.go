@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"mime/multipart"
 	"net"
@@ -81,7 +82,20 @@ func (_self *wireguardScriptService) ParseConfig(cfgFile *multipart.FileHeader) 
 
 	interfaceSection := cfg.Section("Interface")
 	privateKey := interfaceSection.Key("PrivateKey").String()
-	address := interfaceSection.Key("Address").String()
+	// Split the string by comma and remove any leading/trailing whitespaces
+	addresses := strings.Split(interfaceSection.Key("Address").String(), ",")
+	addresses = lo.Map(addresses, func(addr string, _ int) string {
+		return strings.TrimSpace(addr)
+	})
+	// Only allow IPv4 addresses
+	addresses = lo.Filter(addresses, func(addr string, _ int) bool {
+		return isIPv4(addr)
+	})
+	if len(addresses) == 0 {
+		return nil, fmt.Errorf("No valid IPv4 address found in the Address field")
+	}
+	// Pick the first address
+	address := addresses[0]
 
 	mtu := interfaceSection.Key("MTU").String()
 	if mtu == "" {
