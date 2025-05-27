@@ -30,7 +30,7 @@ func (_self *ecmpScriptService) GenerateScript(
 		sessions[i] = i + 1
 	}
 
-	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/ecmp_script.tmpl", map[string]interface{}{
+	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/ecmp_script.tmpl", map[string]any{
 		"Username":   username,
 		"Password":   password,
 		"Sessions":   sessions,

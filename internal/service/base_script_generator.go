@@ -10,7 +10,7 @@ type BaseScriptGenerator struct{}
 
 func (_self BaseScriptGenerator) GenerateScriptFromTemplate(
 	templateFile string,
-	data map[string]interface{},
+	data map[string]any,
 ) (string, error) {
 	tmpl, err := template.ParseFiles(templateFile)
 	if err != nil {

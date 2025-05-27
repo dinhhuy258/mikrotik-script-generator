@@ -29,7 +29,7 @@ func (_self *pppoeScriptService) GenerateScript(
 	lanNetwork,
 	dhcpRange string,
 ) (string, error) {
-	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/pppoe_script.tmpl", map[string]interface{}{
+	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/pppoe_script.tmpl", map[string]any{
 		"Username":       username,
 		"Password":       password,
 		"Interface":      interfaceName,

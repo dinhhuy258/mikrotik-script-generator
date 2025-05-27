@@ -1,0 +1,22 @@
+# Create address list for IP addresses
+/ip firewall address-list
+{{- range .IPAddresses }}
+add list={{ $.RoutingTable }} address={{ . }}
+{{- end }}
+
+# Create routing table
+/routing table add name={{ .RoutingTable }} fib
+
+# Create routes for each IP address
+/ip route
+{{- range .IPAddresses }}
+add dst-address={{ . }} gateway={{ $.Gateway }} routing-table={{ $.RoutingTable }}
+{{- end }}
+
+# Create mangle rule to mark traffic
+/ip firewall mangle
+add chain=prerouting dst-address-list={{ .RoutingTable }} action=mark-routing new-routing-mark={{ .RoutingTable }} passthrough=no comment="Mark {{ .RoutingTable }} traffic to {{ .Gateway }}"
+
+# Create routing rule for marked traffic
+/routing rule
+add src-address=0.0.0.0/0 action=lookup-only-in-table table={{ .RoutingTable }} routing-mark={{ .RoutingTable }}

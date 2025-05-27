@@ -52,7 +52,7 @@ func (_self *wireguardScriptService) GenerateScript(
 	wireguardCfg *WireguardConfig,
 ) (string, error) {
 	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/wireguard_script.tmpl",
-		map[string]interface{}{
+		map[string]any{
 			"Name":       name,
 			"ListenPort": listenPort,
 			"ConfigType": configType,

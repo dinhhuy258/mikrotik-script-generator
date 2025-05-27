@@ -29,5 +29,10 @@ func (_self *homeService) GetMikrotikScripts() []model.MikrotikScript {
 			Description: "Set up multiple PPPoE sessions on the same account and configure Equal-Cost Multi-Path (ECMP) routing for load balancing across those sessions",
 			Route:       "/ecmp",
 		},
+		{
+			Name:        "Configure IP Routing",
+			Description: "Route specific IP addresses through a custom gateway",
+			Route:       "/ip-routing",
+		},
 	}
 }
