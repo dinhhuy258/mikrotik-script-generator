@@ -28,13 +28,45 @@
       {{ end }}
       {{ if .MikrotikScript }}
       <div class="output-container">
-          <h2>Generated Script:</h2>
-          <textarea id="scriptOutput" readonly>{{ .MikrotikScript }}</textarea>
-          <button id="copyButton" onclick="copyScript()" class="copy-btn">Copy to Clipboard</button>
+          <div class="script-tabs">
+              <button class="tab-button active" onclick="showScript('main')">Configuration Script</button>
+              <button class="tab-button" onclick="showScript('reverse')">Reverse Script</button>
+          </div>
+
+          <div id="main-script" class="script-content active">
+              <h2>Generated Script:</h2>
+              <textarea id="scriptOutput" readonly>{{ .MikrotikScript }}</textarea>
+              <button id="copyButton" onclick="copyScript('scriptOutput')" class="copy-btn">Copy to Clipboard</button>
+          </div>
+
+          <div id="reverse-script" class="script-content">
+              <h2>Reverse Script:</h2>
+              <p class="script-description">Use this script to remove the WireGuard configuration and restore the original state.</p>
+              <textarea id="reverseScriptOutput" readonly>{{ .ReverseScript }}</textarea>
+              <button id="copyReverseButton" onclick="copyScript('reverseScriptOutput')" class="copy-btn">Copy to Clipboard</button>
+          </div>
       </div>
       <script>
-          function copyScript() {
-              var scriptOutput = document.getElementById('scriptOutput');
+          function showScript(type) {
+              document.querySelectorAll('.script-content').forEach(content => {
+                  content.classList.remove('active');
+              });
+
+              document.querySelectorAll('.tab-button').forEach(tab => {
+                  tab.classList.remove('active');
+              });
+
+              if (type === 'main') {
+                  document.getElementById('main-script').classList.add('active');
+                  document.querySelector('[onclick="showScript(\'main\')"]').classList.add('active');
+              } else {
+                  document.getElementById('reverse-script').classList.add('active');
+                  document.querySelector('[onclick="showScript(\'reverse\')"]').classList.add('active');
+              }
+          }
+
+          function copyScript(textareaId) {
+              var scriptOutput = document.getElementById(textareaId);
               scriptOutput.select();
               document.execCommand('copy');
               alert('Script copied to clipboard!');

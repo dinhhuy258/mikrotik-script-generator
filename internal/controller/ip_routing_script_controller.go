@@ -100,8 +100,17 @@ func (_self *ipRoutingScriptController) GenerateMikrotikScript(c *gin.Context) {
 		return
 	}
 
+	reverseScript, err := _self.ipRoutingScriptService.GenerateReverseScript(ipRoutingFormData)
+	if err != nil {
+		c.HTML(http.StatusOK, "ip_routing.html", gin.H{
+			"Error": "There was an error generating your reverse script",
+		})
+		return
+	}
+
 	c.HTML(http.StatusOK, "ip_routing.html", gin.H{
 		"MikrotikScript": mikrotikScript,
+		"ReverseScript":  reverseScript,
 		"FormData":       ipRoutingFormData,
 	})
 }

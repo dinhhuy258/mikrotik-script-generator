@@ -1,0 +1,21 @@
+# Remove routing rule for marked traffic
+/routing rule
+remove [find routing-mark="{{ .RoutingTable }}"]
+
+# Remove mangle rule
+/ip firewall mangle
+remove [find comment="Mark {{ .RoutingTable }} traffic to {{ .Gateway }}"]
+
+# Remove routes for each IP address
+/ip route
+{{- range .IPAddresses }}
+remove [find dst-address="{{ . }}" gateway="{{ $.Gateway }}" routing-table="{{ $.RoutingTable }}"]
+{{- end }}
+
+# Remove routing table
+/routing table
+remove [find name="{{ .RoutingTable }}"]
+
+# Remove address list entries
+/ip firewall address-list
+remove [find list="{{ .RoutingTable }}"]

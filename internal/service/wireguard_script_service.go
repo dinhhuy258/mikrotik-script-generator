@@ -35,6 +35,7 @@ type WireguardConfig struct {
 type WireguardScriptService interface {
 	ParseConfig(cfgFile *multipart.FileHeader) (*WireguardConfig, error)
 	GenerateScript(name string, listenPort int, configType string, wireguardCfg *WireguardConfig) (string, error)
+	GenerateReverseScript(name string, listenPort int, configType string, wireguardCfg *WireguardConfig) (string, error)
 }
 
 type wireguardScriptService struct {
@@ -52,6 +53,21 @@ func (_self *wireguardScriptService) GenerateScript(
 	wireguardCfg *WireguardConfig,
 ) (string, error) {
 	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/wireguard_script.tmpl",
+		map[string]any{
+			"Name":       name,
+			"ListenPort": listenPort,
+			"ConfigType": configType,
+			"Wireguard":  wireguardCfg,
+		})
+}
+
+func (_self *wireguardScriptService) GenerateReverseScript(
+	name string,
+	listenPort int,
+	configType string,
+	wireguardCfg *WireguardConfig,
+) (string, error) {
+	return _self.GenerateScriptFromTemplate("internal/service/mikrotik/wireguard_reverse_script.tmpl",
 		map[string]any{
 			"Name":       name,
 			"ListenPort": listenPort,

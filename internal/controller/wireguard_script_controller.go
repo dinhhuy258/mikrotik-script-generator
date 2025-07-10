@@ -71,7 +71,23 @@ func (_self *wireguardScriptController) GenerateMikrotikScript(c *gin.Context) {
 		return
 	}
 
+	reverseScript, err := _self.wireguardScriptService.GenerateReverseScript(
+		wireGuardFormData.Name,
+		wireGuardFormData.ListenPort,
+		wireGuardFormData.ConfigType,
+		wireGuardConfig,
+	)
+	if err != nil {
+		c.HTML(http.StatusOK, "wireguard.html", gin.H{
+			"Error": "There was an error generating your reverse script",
+		})
+
+		return
+	}
+
 	c.HTML(http.StatusOK, "wireguard.html", gin.H{
 		"MikrotikScript": mikrotikScript,
+		"ReverseScript":  reverseScript,
+		"FormData":       wireGuardFormData,
 	})
 }

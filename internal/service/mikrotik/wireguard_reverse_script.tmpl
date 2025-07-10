@@ -1,0 +1,39 @@
+{{ if eq .ConfigType "routing_rule" }}
+# Remove routing rules
+{{- range .Wireguard.Peer.AllowedIPs }}
+/routing rule
+remove [find dst-address="{{ . }}" table="{{ $.Name }}-wireguard"]
+{{- end }}
+{{ else }}
+# Remove mangle firewall rules
+/ip firewall mangle
+remove [find comment="{{ .Name }} Wireguard"]
+
+# Remove address list entries
+/ip firewall address-list
+remove [find list="{{ .Name }}-address-list"]
+{{ end }}
+
+# Remove NAT rule
+/ip firewall nat
+remove [find comment="{{ .Name }}'s Wireguard"]
+
+# Remove route
+/ip route
+remove [find gateway="{{ .Name }}-wireguard" routing-table="{{ .Name }}-wireguard"]
+
+# Remove routing table
+/routing table
+remove [find name="{{ .Name }}-wireguard"]
+
+# Remove IP address
+/ip address
+remove [find interface="{{ .Name }}-wireguard"]
+
+# Remove WireGuard peer
+/interface wireguard peers
+remove [find interface="{{ .Name }}-wireguard"]
+
+# Remove WireGuard interface
+/interface wireguard
+remove [find name="{{ .Name }}-wireguard"]
