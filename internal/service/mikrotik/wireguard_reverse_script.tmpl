@@ -7,7 +7,7 @@ remove [find dst-address="{{ . }}" table="{{ $.Name }}-wireguard"]
 {{ else }}
 # Remove mangle firewall rules
 /ip firewall mangle
-remove [find comment="{{ .Name }} Wireguard"]
+remove [find chain=prerouting dst-address-list="{{ .Name }}-address-list" action=mark-routing new-routing-mark="{{ .Name }}-wireguard"]
 
 # Remove address list entries
 /ip firewall address-list
@@ -16,7 +16,7 @@ remove [find list="{{ .Name }}-address-list"]
 
 # Remove NAT rule
 /ip firewall nat
-remove [find comment="{{ .Name }}'s Wireguard"]
+remove [find chain=srcnat out-interface="{{ .Name }}-wireguard" action=masquerade]
 
 # Remove route
 /ip route

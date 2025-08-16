@@ -4,7 +4,7 @@ remove [find routing-mark="{{ .RoutingTable }}"]
 
 # Remove mangle rule
 /ip firewall mangle
-remove [find comment="Mark {{ .RoutingTable }} traffic to {{ .Gateway }}"]
+remove [find chain=prerouting dst-address-list="{{ .RoutingTable }}" action=mark-routing new-routing-mark="{{ .RoutingTable }}"]
 
 # Remove routes for each IP address
 /ip route
